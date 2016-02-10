@@ -22,12 +22,11 @@ import util.Util;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
-import command.DrawCommand;
+import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
 import command.MacroCommand;
 
-public class CanvasFrame extends JFrame implements ActionListener,
-		MouseMotionListener, WindowListener {
+public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
 	private int width_ = 400;
 	private int height_ = 400;
 
@@ -52,34 +51,15 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	private Random r_ = new Random();
 
 	private String keyword_ = "てすと";
-	private StringBuffer info_ = new StringBuffer();
-
-	private final int INFO_LENGTH = 120; //ここに URL 付けてツイートできる文字．
-
-	private boolean isClearAction_ = false;
-	private boolean isColorAction_ = false;
-	private boolean isFillRectAction_ = false;
-	private boolean isFillOvalAction_ = false;
-	private boolean isSaveAction_ = false;
-
-	private boolean isUndoAction = false;
 
 	//複数回の描画
 	private MacroCommand multiHistory_ = new MacroCommand();
-
-	private String prefixTweet_ = "前";
-	private String sufixTweet_ = "後";
-	private String sufixOverTweet_ = "文字";
-
-	private String allFalse_ = "命令なし";
 
 	private String date_;
 
 	private Calendar cal_ = Calendar.getInstance();
 
 	private JTextField textField_ = new JTextField();
-
-	private int actionNum_ = 3;
 
 	//コンストラクタ
 	public CanvasFrame(String title) {
@@ -142,11 +122,6 @@ public class CanvasFrame extends JFrame implements ActionListener,
 
 	//contoroller
 	public void byKeywordAction(String keyword) {
-		//リセット
-		resetInfo();
-
-		info_.append(prefixTweet_); //prefix をつける．
-
 		if (keyword.contains("やり直し")) {
 			undoAction();
 		}
@@ -172,20 +147,12 @@ public class CanvasFrame extends JFrame implements ActionListener,
 		} else {
 			anyShapeAction();
 		}
-
-		//操作内容を表すテキスト生成
-		createInfo(keyword);
 	}
 
 	private void undoAction() {
-		isUndoAction = true;
-
 		history_.undo();
 		canvas_.newOffScreen();
 		history_.execute();
-
-		resetInfo();
-		info_.append("やり直し");
 	}
 
 	private void anyColorAction() { //色の指定がないとき
@@ -197,13 +164,10 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	}
 
 	private void fillOvalAction() {
-		isFillOvalAction_ = true;
-		info_.append("丸");
-
 		multiHistory_.clear(); //複数回
 		for (int i = 0; i < Util.makeCount(keyword_); i++) {
 			Point p = Util.makePoint(keyword_, width_, height_);
-			Command cmd = new DrawCommand(canvas_, p);
+			Command cmd = new DrawFillOvalCommand(canvas_, p);
 			multiHistory_.append(cmd);
 		}
 		multiHistory_.execute();
@@ -212,10 +176,6 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	}
 
 	private void fillRectAction() {
-		isFillRectAction_ = true;
-
-		info_.append("四角");
-
 		multiHistory_.clear();
 		for (int i = 0; i < Util.makeCount(keyword_); i++) { //複数回
 			Point p = Util.makePoint(keyword_, width_, height_);
@@ -228,7 +188,6 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	}
 
 	private void colorAction() {
-		isColorAction_ = true;
 		Color color;
 
 		color = byKeywordColor(keyword_);
@@ -257,18 +216,14 @@ public class CanvasFrame extends JFrame implements ActionListener,
 		int i = r_.nextInt(100); //add gradation
 		if (keyword.contains("黒")) {
 			color = Color.black;
-			info_.append("黒で");
 		} else if (keyword.contains("赤")) {
 			color = new Color(255, ((i * i) + 55) % 255, (i / 3 + i / 2 + 128) % 255); //randomColor
-			info_.append("赤で");
 		} else if (keyword.contains("青")) {
 			color = new Color(((i * i) + 55) % 255, (i / 3 + i / 2 + 128) % 255, 255); //randomColor
-			info_.append("青で");
 		}
 		//TODO: キーワードで指定できる色を追加する
 
 		if (color == null) {
-			info_.append("その色は知らない");
 			return null;
 		}
 		return color;
@@ -277,22 +232,12 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	private void clearAction() {
 		canvas_.setCanvasPath_(canvas_.getDefaultCanvasPath_());
 
-		isClearAction_ = true;
-		resetInfo();
-		info_.append("消す");
-
 		history_.clear();
 		canvas_.repaint();
 		canvas_.newOffScreen();
 	}
 
 	public void saveAction(boolean isUpdater) {
-		if (!isUpdater) {
-			isSaveAction_ = true;
-		}
-		resetInfo();
-		info_.append("完成");
-
 		//日時作成
 		date_ = "-" + cal_.get(Calendar.YEAR) + cal_.get(Calendar.MONTH) + cal_.get(Calendar.DATE)
 				+ cal_.get(Calendar.HOUR) + cal_.get(Calendar.MINUTE) + cal_.get(Calendar.SECOND);
@@ -306,37 +251,8 @@ public class CanvasFrame extends JFrame implements ActionListener,
 		canvas_.save(canvas_.getFilePath().toString()); //指定名で save 実行
 	}
 
-	public void createInfo(String keyword) {
-		if (!isClearAction_ && !isSaveAction_ && !isUndoAction) { //特定のアクションのとき以外にデフォルトの sufix を付ける．
-			if (info_.length() < INFO_LENGTH) { //info_ が規定より短ければ sufix を付与
-				info_.append(sufixTweet_);
-			} else { //info_ が規定より長ければ info_ を消してデフォルトの info_を作る．
-				resetInfo();
-				info_.append(sufixOverTweet_);
-			}
-		}
-
-		resetAction(); //boolean リセット
-	}
-
-	private void resetAction() {
-		//boolean をリセットする．
-		isClearAction_ = false;
-		isColorAction_ = false;
-		isFillOvalAction_ = false;
-		isFillRectAction_ = false;
-		isSaveAction_ = false;
-
-		isUndoAction = false;
-	}
-
-	public void resetInfo() {
-		//消す
-		info_.delete(0, info_.length());
-	}
-
 	public void mouseDragged(MouseEvent e) {
-		Command cmd = new DrawCommand(canvas_, e.getPoint());
+		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
 		history_.append(cmd);
 		cmd.execute();
 	}
@@ -374,10 +290,6 @@ public class CanvasFrame extends JFrame implements ActionListener,
 		keyword_ = keyword;
 	}
 
-	public StringBuffer getInfo() {
-		return info_;
-	}
-
 	public String getFilePathinString() {
 		return canvas_.getFilePath().toString();
 	}
@@ -385,5 +297,4 @@ public class CanvasFrame extends JFrame implements ActionListener,
 	public DrawCanvas getCanvas() {
 		return canvas_;
 	}
-
 }

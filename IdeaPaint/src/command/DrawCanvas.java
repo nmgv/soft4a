@@ -107,7 +107,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 	}
 
 	//描画
-	public void draw(int x, int y) {
+	public void drawFillOval(int x, int y) {
 		off_.setColor(color_);
 		off_.fillOval(x - radius_, y - radius_, radius_ * 2, radius_ * 2);
 		update();
@@ -144,8 +144,8 @@ public class DrawCanvas extends Canvas implements Drawable {
 		propCanvas_.getProp().setProperty("canvasPath", filepath);
 
 		try {
-//			boolean result = ImageIO.write(readImage, "png", new File(filepath));
-			boolean result = ImageIO.write(readImage_, "png", new File("test.png"));
+//			ImageIO.write(readImage, "png", new File(filepath));
+			ImageIO.write(readImage_, "png", new File("test.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
