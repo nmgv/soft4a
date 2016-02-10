@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import util.Util;
-import command.BaseDrawTextCommand;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
@@ -183,7 +182,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		float strokeWeight = 5;
 		
 		Command cmd = new DrawTriangleCommand(canvas_, xPoints, yPoints, fillColor, strokeColor, strokeWeight);
-		Command cmd = new DrawTextCommand(canvas_, 20, 20, "abcde", fillColor);
+		Command cmd = new DrawTextCommand(canvas_, 20, 20, "abcde", 3, 30, fillColor);
 		history_.append(cmd);
 		cmd.execute();*/
 	}

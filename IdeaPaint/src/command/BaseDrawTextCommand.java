@@ -13,8 +13,8 @@ public class BaseDrawTextCommand implements Command {
 	private int x, y, fontSize, fontStyle;
 
 	//コンストラクタ
-	public BaseDrawTextCommand(Drawable drawable, int x, int y, String text, int fontStyle, int fontSize){
-		this.drawable_ = drawable;
+	public BaseDrawTextCommand(Drawable drawable_, int x, int y, String text, int fontStyle, int fontSize){
+		this.drawable_ = drawable_;
 		this.x = x;
 		this.y = y;
 		this.text = text;
@@ -22,8 +22,8 @@ public class BaseDrawTextCommand implements Command {
 		this.fontSize = fontSize;
 	}
 
-	public BaseDrawTextCommand(Drawable drawable, int x, int y, String text, int fontSize){
-		this.drawable_ = drawable;
+	public BaseDrawTextCommand(Drawable drawable_, int x, int y, String text, int fontSize){
+		this.drawable_ = drawable_;
 		this.x = x;
 		this.y = y;
 		this.text = text;
@@ -31,8 +31,8 @@ public class BaseDrawTextCommand implements Command {
 		this.fontSize = fontSize;
 	}
 
-	public BaseDrawTextCommand(Drawable drawable, int x, int y, String text){
-		this.drawable_ = drawable;
+	public BaseDrawTextCommand(Drawable drawable_, int x, int y, String text){
+		this.drawable_ = drawable_;
 		this.x = x;
 		this.y = y;
 		this.text = text;

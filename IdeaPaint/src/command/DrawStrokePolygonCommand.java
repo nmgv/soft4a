@@ -1,16 +1,9 @@
 package command;
 
-public class DrawStrokePolygonCommand implements Command {
-	//描画対象
-	protected Drawable drawable_;
-	private int xPoints[], yPoints[], nPoints;
-
+public class DrawStrokePolygonCommand extends BaseDrawPolygonCommand {
 	//コンストラクタ
-	public DrawStrokePolygonCommand(Drawable drawable, int xPoints[], int yPoints[], int nPoints){
-		this.drawable_ = drawable;
-		this.xPoints = xPoints;
-		this.yPoints = yPoints;
-		this.nPoints = nPoints;
+	public DrawStrokePolygonCommand(Drawable drawable_, int xPoints[], int yPoints[], int nPoints){
+		super(drawable_, xPoints, yPoints, nPoints);
 	}
 
 	//実行

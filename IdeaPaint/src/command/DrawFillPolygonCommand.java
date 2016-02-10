@@ -1,16 +1,9 @@
 package command;
 
-public class DrawFillPolygonCommand implements Command {
-	//描画対象
-	protected Drawable drawable_;
-	private int xPoints[], yPoints[], nPoints;
-
+public class DrawFillPolygonCommand extends BaseDrawPolygonCommand {
 	//コンストラクタ
-	public DrawFillPolygonCommand(Drawable drawable, int xPoints[], int yPoints[], int nPoints){
-		this.drawable_ = drawable;
-		this.xPoints = xPoints;
-		this.yPoints = yPoints;
-		this.nPoints = nPoints;
+	public DrawFillPolygonCommand(Drawable drawable_, int xPoints[], int yPoints[], int nPoints){
+		super(drawable_, xPoints, yPoints, nPoints);
 	}
 
 	//実行
