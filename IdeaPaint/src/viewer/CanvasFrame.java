@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -17,14 +19,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import util.CSVReader;
+import util.FigFileParser;
 import util.Util;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
 import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
-import command.DrawTriangleCommand;
-import command.DrawTextCommand;
 import command.MacroCommand;
 
 public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
@@ -48,6 +50,8 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	private JButton saveButton_ = new JButton("save");
 
 	private JButton keywordButton_ = new JButton("keyword!");
+
+	private JButton testFuncButton = new JButton("テスト");
 
 	private Random r_ = new Random();
 
@@ -76,6 +80,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		fillOvalButton_.addActionListener(this);
 		saveButton_.addActionListener(this);
 		keywordButton_.addActionListener(this);
+		testFuncButton.addActionListener(this);
 
 		Box buttonBox = new Box(BoxLayout.X_AXIS);
 		buttonBox.add(saveButton_);
@@ -84,6 +89,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		buttonBox.add(fillRectButton_);
 		buttonBox.add(fillOvalButton_);
 		buttonBox.add(keywordButton_);
+		buttonBox.add(testFuncButton);
 
 		Box mainBox = new Box(BoxLayout.Y_AXIS);
 		mainBox.add(new OptionPanel(this, canvas_.getPropCanvas_(), "canvasPath"));
@@ -118,6 +124,9 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 			textField_.setText("");
 
 			byKeywordAction(keyword_);
+		}
+		if(e.getSource() == testFuncButton) {
+			testFuncAction();
 		}
 	}
 
@@ -174,17 +183,6 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		multiHistory_.execute();
 		history_.append(multiHistory_);
 		canvas_.repaint();
-
-/*		int xPoints[] = {50, 100, 75};
-		int yPoints[] = {50, 50, 100};
-		Color fillColor = new Color(255, 0, 0);
-		Color strokeColor = new Color(0, 0, 255);
-		float strokeWeight = 5;
-		
-		Command cmd = new DrawTriangleCommand(canvas_, xPoints, yPoints, fillColor, strokeColor, strokeWeight);
-		Command cmd = new DrawTextCommand(canvas_, 20, 20, "abcde", 3, 30, fillColor);
-		history_.append(cmd);
-		cmd.execute();*/
 	}
 
 	private void fillRectAction() {
@@ -261,6 +259,29 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		canvas_.getFilePath().append(canvas_.getFilePathSufix());
 
 		canvas_.save(canvas_.getFilePath().toString()); //指定名で save 実行
+	}
+
+	private void testFuncAction() {
+		String fileName = "test.fig";
+		drawFromFigFile(fileName);
+	}
+
+	private void drawFromFigFile(String fileName) {
+		ArrayList<ArrayList<String>> data;
+
+		String dir = canvas_.getFigFileDir();
+		try {
+			CSVReader reader = new CSVReader(dir + fileName);
+			data = reader.read();
+		} catch(IOException e) {
+			System.err.println("図形ファイルが見つかりません");
+			return;
+		}
+
+		FigFileParser parser = new FigFileParser(canvas_, data);
+		MacroCommand cmd = parser.parse();
+		history_.append(cmd);
+		cmd.execute();	
 	}
 
 	public void mouseDragged(MouseEvent e) {

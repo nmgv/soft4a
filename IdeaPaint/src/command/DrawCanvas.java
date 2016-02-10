@@ -43,6 +43,8 @@ public class DrawCanvas extends Canvas implements Drawable {
 	private String filePathPrefix_;
 	private String filePathSufix_;
 
+	private String figFileDir_;
+	
 	private StringBuffer filePath_ = new StringBuffer();
 
 	private PropertiesReader propCanvas_ = new PropertiesReader("./conf/canvas.properties");
@@ -65,6 +67,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 		filePathDir_ = propCanvas_.getProp().getProperty("filePathDir");
 		filePathPrefix_ = propCanvas_.getProp().getProperty("filePrefix");
 		filePathSufix_ = propCanvas_.getProp().getProperty("fileSufix");
+		figFileDir_ = propCanvas_.getProp().getProperty("figFileDir");
 
 		try {
 			if (canvasPath_ == null) { //default
@@ -230,4 +233,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 		return propCanvas_;
 	}
 
+	public String getFigFileDir() {
+		return figFileDir_;
+	}
 }

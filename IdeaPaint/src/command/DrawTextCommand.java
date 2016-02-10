@@ -6,7 +6,7 @@ public class DrawTextCommand extends AbstractDrawShapeCommand {
 	private String text;
 	private int x, y, fontSize, fontStyle;
 
-	public DrawTextCommand(Drawable drawable_, int x, int y, String text, int fontStyle, int fontSize, Color fillColor) {
+	public DrawTextCommand(Drawable drawable_, int x, int y, Color fillColor, String text, int fontStyle, int fontSize) {
 		super(drawable_, fillColor, null, 0);
 
 		this.x = x;
@@ -16,7 +16,7 @@ public class DrawTextCommand extends AbstractDrawShapeCommand {
 		this.fontSize = fontSize;
 	}
 
-	public DrawTextCommand(Drawable drawable_, int x, int y, String text, int fontSize, Color fillColor) {
+	public DrawTextCommand(Drawable drawable_, int x, int y, Color fillColor, String text, int fontSize) {
 		super(drawable_, fillColor, null, 0);
 
 		this.x = x;
@@ -26,7 +26,7 @@ public class DrawTextCommand extends AbstractDrawShapeCommand {
 		this.fontSize = fontSize;
 	}
 
-	public DrawTextCommand(Drawable drawable_, int x, int y, String text, Color fillColor) {
+	public DrawTextCommand(Drawable drawable_, int x, int y, Color fillColor, String text) {
 		super(drawable_, fillColor, null, 0);
 
 		this.x = x;
