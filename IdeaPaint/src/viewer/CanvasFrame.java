@@ -18,12 +18,14 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import util.Util;
-
+import command.BaseDrawTextCommand;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
 import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
+import command.DrawTriangleCommand;
+import command.DrawTextCommand;
 import command.MacroCommand;
 
 public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
@@ -173,6 +175,17 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		multiHistory_.execute();
 		history_.append(multiHistory_);
 		canvas_.repaint();
+
+/*		int xPoints[] = {50, 100, 75};
+		int yPoints[] = {50, 50, 100};
+		Color fillColor = new Color(255, 0, 0);
+		Color strokeColor = new Color(0, 0, 255);
+		float strokeWeight = 5;
+		
+		Command cmd = new DrawTriangleCommand(canvas_, xPoints, yPoints, fillColor, strokeColor, strokeWeight);
+		Command cmd = new DrawTextCommand(canvas_, 20, 20, "abcde", fillColor);
+		history_.append(cmd);
+		cmd.execute();*/
 	}
 
 	private void fillRectAction() {

@@ -1,8 +1,11 @@
 package command;
 
+import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -120,9 +123,36 @@ public class DrawCanvas extends Canvas implements Drawable {
 		update();
 	}
 
+	//多角形を描画(塗りつぶし)
+	public void drawFillPolygon(int xPoints[], int yPoints[], int nPoints) {
+		off_.setColor(color_);
+		off_.fillPolygon(xPoints, yPoints, nPoints);
+		update();
+	}
+
+	//多角形を描画(枠線)
+	public void drawStrokePolygon(int xPoints[], int yPoints[], int nPoints) {
+		off_.setColor(color_);
+		off_.drawPolygon(xPoints, yPoints, nPoints);
+		update();
+	}
+
+	//文字列を描画
+	public void baseDrawText(int x, int y, String text, Font font) {
+		off_.setColor(color_);
+		off_.setFont(font);
+		off_.drawString(text, x, y);
+		update();
+	}
+
 	//色セット
 	public void setColor(Color color) {
 		this.color_ = color;
+	}
+
+	public void setStroke(BasicStroke stroke) {
+		Graphics2D g2 = (Graphics2D)off_;
+		g2.setStroke(stroke);
 	}
 
 	public void update() {
