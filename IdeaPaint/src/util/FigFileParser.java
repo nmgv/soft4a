@@ -1,10 +1,12 @@
 package util;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import command.Command;
 import command.DrawOvalCommand;
+import command.DrawRectangleCommand;
 import command.DrawTextCommand;
 import command.DrawTriangleCommand;
 import command.Drawable;
@@ -36,6 +38,9 @@ public class FigFileParser {
 				break;
 			case "oval":
 				cmd = parseOval(list);
+				break;
+			case "Rect":
+				cmd = parseRect(list);
 				break;
 			}
 
@@ -88,6 +93,21 @@ public class FigFileParser {
 			int fontSize = Validator.validatePositiveInt(list.get(5));
 
 			return new DrawTextCommand(drawable_, x, y, fillColor, text, fontStyle, fontSize);
+		} catch(Exception e) {
+			return null;
+		}
+	}
+
+	private Command parseRect(ArrayList<String> list) {
+		try{
+			Point p = new Point(Validator.validatePositiveInt(list.get(0)),Validator.validatePositiveInt(list.get(1)));
+			int width = Validator.validatePositiveInt(list.get(2));
+			int height = Validator.validatePositiveInt(list.get(3));
+			Color fillColor = Validator.validateColor(list.get(4));
+			Color strokeColor = Validator.validateColor(list.get(5));
+			Float strokeWeight = Validator.validateStrokeWeight(list.get(6));
+
+			return new DrawRectangleCommand(drawable_, p, width, height, fillColor, strokeColor, strokeWeight);
 		} catch(Exception e) {
 			return null;
 		}

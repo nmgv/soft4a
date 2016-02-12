@@ -23,7 +23,7 @@ public class Validator {
 	public static float validatePositiveFloat(String raw) throws Exception {
 		float value;
 		try {
-			value = Integer.valueOf(raw);
+			value = Float.valueOf(raw);
 		} catch(Exception e) {
 			System.err.println("値をfloat型に変換できません(検出値 : " + raw + ").");
 			throw e;
