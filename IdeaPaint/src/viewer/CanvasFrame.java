@@ -25,7 +25,7 @@ import util.Util;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
-import command.DrawFillOvalCommand;
+//import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
 import command.MacroCommand;
 
@@ -207,7 +207,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	}
 
 	private void fillOvalAction() {
-		multiHistory_.clear(); //複数回
+/*		multiHistory_.clear(); //複数回
 		for (int i = 0; i < Util.makeCount(keyword_); i++) {
 			Point p = Util.makePoint(keyword_, width_, height_);
 			Command cmd = new DrawFillOvalCommand(canvas_, p);
@@ -215,7 +215,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		}
 		multiHistory_.execute();
 		history_.append(multiHistory_);
-		canvas_.repaint();
+		canvas_.repaint();*/
 	}
 
 	private void fillRectAction() {
@@ -318,9 +318,9 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
+/*		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
 		history_.append(cmd);
-		cmd.execute();
+		cmd.execute();*/
 	}
 
 	public void mouseMoved(MouseEvent e) {
