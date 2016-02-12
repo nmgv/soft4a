@@ -154,6 +154,8 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 			fillRectAction();
 		} else if (keyword.contains("丸")) {
 			fillOvalAction();
+		} else if (keyword.contains("test")){
+			drawFromFigFile("hara.txt");
 		} else {
 			anyShapeAction();
 		}
