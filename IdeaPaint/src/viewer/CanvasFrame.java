@@ -25,12 +25,13 @@ import util.Util;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
+import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
 import command.MacroCommand;
 
 public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
-	private int width_ = 400;
-	private int height_ = 400;
+	private int width_ = 640;
+	private int height_ = 360;
 
 	//描画履歴
 	private MacroCommand history_ = new MacroCommand();
@@ -52,6 +53,12 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 
 	private JButton testFuncButton = new JButton("テスト");
 
+	private JButton Picture1FuncButton = new JButton("picture1");
+	
+	private JButton Picture2FuncButton = new JButton("picture2");
+	
+	private JButton Picture3FuncButton = new JButton("picture3");
+	
 	private Random r_ = new Random();
 
 	private String keyword_ = "てすと";
@@ -80,6 +87,9 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		saveButton_.addActionListener(this);
 		keywordButton_.addActionListener(this);
 		testFuncButton.addActionListener(this);
+		Picture1FuncButton.addActionListener(this);
+		Picture2FuncButton.addActionListener(this);
+		Picture3FuncButton.addActionListener(this);
 
 		Box buttonBox = new Box(BoxLayout.X_AXIS);
 		buttonBox.add(saveButton_);
@@ -89,7 +99,10 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		buttonBox.add(fillOvalButton_);
 		buttonBox.add(keywordButton_);
 		buttonBox.add(testFuncButton);
-
+		buttonBox.add(Picture1FuncButton);
+		buttonBox.add(Picture2FuncButton);
+		buttonBox.add(Picture3FuncButton);
+		
 		Box mainBox = new Box(BoxLayout.Y_AXIS);
 		mainBox.add(new OptionPanel(this, canvas_.getPropCanvas_(), "canvasPath"));
 		mainBox.add(buttonBox);
@@ -127,6 +140,16 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		if(e.getSource() == testFuncButton) {
 			testFuncAction();
 		}
+		//ボタン動作　各簡易図
+		if(e.getSource() == Picture1FuncButton) {
+			
+		}
+		if(e.getSource() == Picture2FuncButton) {
+			
+		}
+		if(e.getSource() == Picture3FuncButton) {
+			
+		}
 	}
 
 	//contoroller
@@ -153,8 +176,19 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 			fillRectAction();
 		} else if (keyword.contains("丸")) {
 			fillOvalAction();
+		} else if (keyword.contains("test")){
+			drawFromFigFile("hara.txt");
 		} else {
 			anyShapeAction();
+		}
+		
+		//keyword動作　各簡易図
+		if(keyword.contains("1")){
+			
+		}else if(keyword.contains("2")){
+			
+		}else if(keyword.contains("3")){
+			
 		}
 	}
 
@@ -176,8 +210,8 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		multiHistory_.clear(); //複数回
 		for (int i = 0; i < Util.makeCount(keyword_); i++) {
 			Point p = Util.makePoint(keyword_, width_, height_);
-//			Command cmd = new DrawFillOvalCommand(canvas_, p);
-//			multiHistory_.append(cmd);
+			Command cmd = new DrawFillOvalCommand(canvas_, p);
+			multiHistory_.append(cmd);
 		}
 		multiHistory_.execute();
 		history_.append(multiHistory_);
@@ -284,9 +318,9 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	}
 
 	public void mouseDragged(MouseEvent e) {
-/*		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
+		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
 		history_.append(cmd);
-		cmd.execute();*/
+		cmd.execute();
 	}
 
 	public void mouseMoved(MouseEvent e) {
