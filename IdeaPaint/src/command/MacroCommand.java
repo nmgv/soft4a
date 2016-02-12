@@ -5,11 +5,11 @@ import java.util.Stack;
 
 public class MacroCommand implements Command {
 	//命令の集合
-	private Stack commands_ = new Stack();
+	protected Stack<Command> commands_ = new Stack<Command>();
 
 	//実行
 	public void execute() {
-		Iterator it = commands_.iterator();
+		Iterator<Command> it = commands_.iterator();
 		while(it.hasNext()){
 			((Command)it.next()).execute();
 		}

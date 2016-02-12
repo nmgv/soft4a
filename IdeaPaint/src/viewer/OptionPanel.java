@@ -16,7 +16,7 @@ public class OptionPanel extends JPanel {
 	 * @author ueno
 	 */
 
-	private String targetPropKey_ = "canvasPath";
+	private String targetPropKey_ = "defaultCanvasPath";
 
 	public OptionPanel(CanvasFrame targetFrame, PropertiesReader prop, String targetPropKeyPre) {
 		initialize(targetFrame, prop, targetPropKeyPre);
@@ -30,14 +30,14 @@ public class OptionPanel extends JPanel {
 		//prop の読み込み
 		prop.readProperities();
 		this.setLayout(new FlowLayout());
-		this.setBorder(new TitledBorder("Option"));
+		this.setBorder(new TitledBorder("オプション"));
 
 		StringBuffer imageFilePathBuf = new StringBuffer(prop.getProp().getProperty(targetPropKeyPre));
 		JLabel imageFilePathLabel = new JLabel(imageFilePathBuf.toString());
 
 		JButton imageFilePathButton = null;
 
-		imageFilePathButton = new DirChooserButton(targetFrame, "Select Background", "画像を指定", this, "OK", imageFilePathBuf, imageFilePathLabel, targetPropKeyPre, prop);
+		imageFilePathButton = new DirChooserButton(targetFrame, "背景を選択", "画像を指定", this, "OK", imageFilePathBuf, imageFilePathLabel, targetPropKeyPre, prop);
 
 		Box box1 = Box.createHorizontalBox();
 

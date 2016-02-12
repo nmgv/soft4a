@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,16 +24,17 @@ import javax.swing.JTextField;
 import util.CSVReader;
 import util.FigFileParser;
 import util.Util;
+
 import command.ColorCommand;
 import command.Command;
+import command.DefaultDrawFillOvalCommand;
+import command.DefaultDrawFillRectCommand;
 import command.DrawCanvas;
-//import command.DrawFillOvalCommand;
-import command.DrawFillRectCommand;
 import command.MacroCommand;
 
 public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
-	private int width_ = 640;
-	private int height_ = 360;
+	private int width_ = 1280;
+	private int height_ = 720;
 
 	//描画履歴
 	private MacroCommand history_ = new MacroCommand();
@@ -39,25 +42,23 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	private DrawCanvas canvas_ = new DrawCanvas(width_, height_, history_);
 
 	//消去ボタン
-	private JButton clearButton_ = new JButton("clear");
+	private JButton clearButton_ = new JButton("クリア");
 	//カラーボタン
-	private JButton colorButton_ = new JButton("Color");
+	private JButton colorButton_ = new JButton("色");
 
-	private JButton fillRectButton_ = new JButton("Rect");
+	private JButton fillRectButton_ = new JButton("矩形");
 
-	private JButton fillOvalButton_ = new JButton("Oval");
+	private JButton fillOvalButton_ = new JButton("円");
 
-	private JButton saveButton_ = new JButton("save");
+	private JButton saveButton_ = new JButton("保存");
 
-	private JButton keywordButton_ = new JButton("keyword!");
+	private JButton keywordButton_ = new JButton("キーワード");
 
-	private JButton testFuncButton = new JButton("テスト");
-
-	private JButton Picture1FuncButton = new JButton("picture1");
+	private JButton Picture1FuncButton = new JButton("153352");
 	
-	private JButton Picture2FuncButton = new JButton("picture2");
+	private JButton Picture2FuncButton = new JButton("153366");
 	
-	private JButton Picture3FuncButton = new JButton("picture3");
+	private JButton Picture3FuncButton = new JButton("153369");
 	
 	private Random r_ = new Random();
 
@@ -86,7 +87,6 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		fillOvalButton_.addActionListener(this);
 		saveButton_.addActionListener(this);
 		keywordButton_.addActionListener(this);
-		testFuncButton.addActionListener(this);
 		Picture1FuncButton.addActionListener(this);
 		Picture2FuncButton.addActionListener(this);
 		Picture3FuncButton.addActionListener(this);
@@ -98,13 +98,12 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		buttonBox.add(fillRectButton_);
 		buttonBox.add(fillOvalButton_);
 		buttonBox.add(keywordButton_);
-		buttonBox.add(testFuncButton);
 		buttonBox.add(Picture1FuncButton);
 		buttonBox.add(Picture2FuncButton);
 		buttonBox.add(Picture3FuncButton);
 		
 		Box mainBox = new Box(BoxLayout.Y_AXIS);
-		mainBox.add(new OptionPanel(this, canvas_.getPropCanvas_(), "canvasPath"));
+		mainBox.add(new OptionPanel(this, canvas_.getPropCanvas_(), null));
 		mainBox.add(buttonBox);
 		mainBox.add(textField_);
 		mainBox.add(canvas_);
@@ -112,7 +111,11 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		getContentPane().add(mainBox);
 
 		pack();
+
+		setTitle("ペイント");
 		setVisible(true);
+
+		drawFromFigFile("test.fig");
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -137,18 +140,18 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 
 			byKeywordAction(keyword_);
 		}
-		if(e.getSource() == testFuncButton) {
-			testFuncAction();
-		}
 		//ボタン動作　各簡易図
 		if(e.getSource() == Picture1FuncButton) {
-			
+			String figFileName = "153352.fig"; // 多田
+			drawFromFigFile(figFileName);
 		}
 		if(e.getSource() == Picture2FuncButton) {
-			
+			String figFileName = "153366.fig"; // 長谷川
+			drawFromFigFile(figFileName);
 		}
 		if(e.getSource() == Picture3FuncButton) {
-			
+			String figFileName = "153369.fig"; // 原
+			drawFromFigFile(figFileName);
 		}
 	}
 
@@ -176,19 +179,23 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 			fillRectAction();
 		} else if (keyword.contains("丸")) {
 			fillOvalAction();
-		} else if (keyword.contains("test")){
-			drawFromFigFile("hara.txt");
 		} else {
 			anyShapeAction();
 		}
-		
+
 		//keyword動作　各簡易図
-		if(keyword.contains("1")){
-			
-		}else if(keyword.contains("2")){
-			
-		}else if(keyword.contains("3")){
-			
+		String regex = "\\d{6}"; // 6回の数字の繰り返し
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(keyword);
+
+		if(m.find()) { // 6桁の数字列を見つけた場合
+			String suffix = ".fig";
+			String figFileName = m.group() + suffix; // XXXXXX.fig
+
+			int delay = 0;
+			if(keyword.contains("step")) delay = 500; // さらにキーワード "step" で 500ms ごとに描画
+
+			drawStepByStep(figFileName, delay);
 		}
 	}
 
@@ -207,22 +214,22 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 	}
 
 	private void fillOvalAction() {
-/*		multiHistory_.clear(); //複数回
+		multiHistory_.clear(); //複数回
 		for (int i = 0; i < Util.makeCount(keyword_); i++) {
 			Point p = Util.makePoint(keyword_, width_, height_);
-			Command cmd = new DrawFillOvalCommand(canvas_, p);
+			Command cmd = new DefaultDrawFillOvalCommand(canvas_, p);
 			multiHistory_.append(cmd);
 		}
 		multiHistory_.execute();
 		history_.append(multiHistory_);
-		canvas_.repaint();*/
+		canvas_.repaint();
 	}
 
 	private void fillRectAction() {
 		multiHistory_.clear();
 		for (int i = 0; i < Util.makeCount(keyword_); i++) { //複数回
 			Point p = Util.makePoint(keyword_, width_, height_);
-			Command cmd = new DrawFillRectCommand(canvas_, p, 10, 20);
+			Command cmd = new DefaultDrawFillRectCommand(canvas_, p, r_.nextInt(3) + 1);
 
 			multiHistory_.append(cmd);
 		}
@@ -294,12 +301,12 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		canvas_.save(canvas_.getFilePath().toString()); //指定名で save 実行
 	}
 
-	private void testFuncAction() {
-		String fileName = "test.fig";
-		drawFromFigFile(fileName);
+	private void drawFromFigFile(String fileName) {
+		drawStepByStep(fileName, 0);
 	}
 
-	private void drawFromFigFile(String fileName) {
+	private void drawStepByStep(String fileName, int delay) {
+		clearAction();
 		ArrayList<ArrayList<String>> data;
 
 		String dir = canvas_.getFigFileDir();
@@ -311,16 +318,16 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 			return;
 		}
 
-		FigFileParser parser = new FigFileParser(canvas_, data);
+		FigFileParser parser = new FigFileParser(canvas_, data, delay);
 		MacroCommand cmd = parser.parse();
 		history_.append(cmd);
-		cmd.execute();	
+		cmd.execute();
 	}
 
 	public void mouseDragged(MouseEvent e) {
-/*		Command cmd = new DrawFillOvalCommand(canvas_, e.getPoint());
+		Command cmd = new DefaultDrawFillOvalCommand(canvas_, e.getPoint());
 		history_.append(cmd);
-		cmd.execute();*/
+		cmd.execute();
 	}
 
 	public void mouseMoved(MouseEvent e) {

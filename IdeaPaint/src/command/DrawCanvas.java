@@ -35,7 +35,6 @@ public class DrawCanvas extends Canvas implements Drawable {
 	//履歴
 	private MacroCommand history_;
 
-	private String wakuFilePath_;
 	private String defaultCanvasPath_;
 	private String canvasPath_;
 
@@ -62,8 +61,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 		propCanvas_.readProperities();
 
 		canvasPath_ = propCanvas_.getProp().getProperty("canvasPath");
-		wakuFilePath_ = propCanvas_.getProp().getProperty("wakuPath");
-		defaultCanvasPath_ = propCanvas_.getProp().getProperty("defaultCanvasPath_");
+		defaultCanvasPath_ = propCanvas_.getProp().getProperty("defaultCanvasPath");
 		filePathDir_ = propCanvas_.getProp().getProperty("filePathDir");
 		filePathPrefix_ = propCanvas_.getProp().getProperty("filePrefix");
 		filePathSufix_ = propCanvas_.getProp().getProperty("fileSufix");
@@ -90,6 +88,8 @@ public class DrawCanvas extends Canvas implements Drawable {
 			l1g_ = layer1_.createGraphics();
 			l1g_.drawImage(layer1_, 0, 0, null);
 			off_ = readImage_.createGraphics();
+			off_.setColor(Color.white);
+			off_.fillRect(0, 0, getWidth(), getHeight());
 			off_.drawImage(layer1_, 0, 0, null); //off の担当する readImage に layer1 を描く
 			off_.drawImage(readImage_, 0, 0, this); //off からキャンバスに readImage を描く
 
@@ -107,56 +107,60 @@ public class DrawCanvas extends Canvas implements Drawable {
 		init();
 	}
 
+	public void drawReadImage() {
+		g_ = getGraphics();
+		g_.drawImage(readImage_, 0, 0, this);
+	}
+
 	//履歴全体を再描画
 	public void paint(Graphics g) {
 		history_.execute();
 	}
-	
-	//描画
-	public void drawFillOval(int x, int y, int width, int height ) {
+
+	/* ----- 標準描画関数 ----- */
+
+	// 四角を描画
+	public void defaultDrawFillRect(int x, int y, int length) {
 		off_.setColor(color_);
-		off_.fillOval(x, y, width, height);
+		off_.fillRect(x - length, y - length, length * 2, length * 2);
 		update();
 	}
 
-	public void drawFillOval(int x, int y) {
+	// 円を描画
+	public void defaultDrawFillOval(int x, int y) {
 		off_.setColor(color_);
 		off_.fillOval(x - radius_, y - radius_, radius_ * 2, radius_ * 2);
 		update();
 	}
 
-	//枠だけ円
-	public void drawOval( int x, int y, int width, int height ){
-		off_.setColor(color_);
-		off_.drawOval(x, y, width, height);
-		update();
-	}
 
-	//四角を描画
-	public void drawFillRect(int x, int y, int length) {
-		off_.setColor(color_);
-		off_.fillRect(x - length, y - length, length * 2, length * 2);
-		update();
-	}
-	
-	//四角を描画（塗りつぶし）
+	/* ----- 描画関数 ----- */
+
+	// 矩形を描画（塗りつぶし）
 	public void drawFillRect(int x, int y, int width, int height) {
 		off_.setColor(color_);
-		off_.fillRect(x - width, y - height, width * 2, height * 2);
+		off_.fillRect(x, y, width, height);
 		update();
 	}
 
-	//四角を描画（線）
-	public void drawLineRect(int x, int y, int width, int height){
+	// 矩形を描画（枠線）
+	public void drawStrokeRect(int x, int y, int width, int height){
 		off_.setColor(color_);
-		off_.drawRect(x - width, y - height, width*2, height*2);
+		off_.drawRect(x, y, width, height);
 		update();
 	}
 
-	//線を描画
-	public void drawLine(int x1, int y1, int x2, int y2){
+	// 楕円を描画(塗りつぶし)
+	public void drawFillOval(int x, int y, int width, int height) {
 		off_.setColor(color_);
-		off_.drawLine(x1, y1, x2, y2);
+		off_.fillOval(x, y, width, height);
+		update();
+	}
+
+	// 楕円を描画(枠線)
+	public void drawStrokeOval( int x, int y, int width, int height){
+		off_.setColor(color_);
+		off_.drawOval(x, y, width, height);
 		update();
 	}
 
@@ -174,19 +178,28 @@ public class DrawCanvas extends Canvas implements Drawable {
 		update();
 	}
 
-	//文字列を描画
-	public void baseDrawText(int x, int y, String text, Font font) {
+	// 直線を描画
+	public void baseDrawLine(int x1, int y1, int x2, int y2){
 		off_.setColor(color_);
-		off_.setFont(font);
-		off_.drawString(text, x, y);
+		off_.drawLine(x1, y1, x2, y2);
 		update();
 	}
 
-	//色セット
+	// 文字列を描画
+	public void baseDrawText(int x, int y, String text, Font font) {
+		off_.setColor(color_);
+		off_.setFont(font);
+		int fontHeight = off_.getFontMetrics().getHeight();
+		off_.drawString(text, x, y + fontHeight);
+		update();
+	}
+
+	// 色のセット
 	public void setColor(Color color) {
 		this.color_ = color;
 	}
 
+	// 線幅のセット
 	public void setStroke(BasicStroke stroke) {
 		Graphics2D g2 = (Graphics2D)off_;
 		g2.setStroke(stroke);
@@ -200,9 +213,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 			off_.drawImage(layer2_, 0, 0, null); //off の担当する readImage に layer2 を描く
 
 			off_ = layer2_.createGraphics(); //layer2 を担当させる //セットし直す
-
-			g_ = getGraphics();
-			g_.drawImage(readImage_, 0, 0, this);
+			drawReadImage();
 		}
 	}
 
@@ -236,10 +247,6 @@ public class DrawCanvas extends Canvas implements Drawable {
 
 	public String getFilePathSufix() {
 		return filePathSufix_;
-	}
-
-	public String getWakuFilePath() {
-		return wakuFilePath_;
 	}
 
 	public BufferedImage getReadImage() {

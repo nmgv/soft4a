@@ -1,36 +1,30 @@
 ﻿# 色の指定(fillColor, strokeColor)
-
 # <r> <g> <b>
-
 # (255, 0, 0) → 255 0 0
 
-
 # フォントのスタイル(fontStyle)
-
 # 0 : 標準
-
 # 1 : 太字
-
 # 2 : 斜体
-
 # 3 : 太字 + 斜体
 
-
-# 三角形
-
-# triangle,<x1>,<y1>,<x2>,<y2>,<x3>,<y3>,<fillColor>,<strokeColor>,<strokeWeight>
-
-
-# 文字列
-
-# text,<x>,<y>,<fillColor>,<text>,<fontStyle>,<fontSize>
+# 矩形
+# rect,<x>,<y>,<width>,<height>,<fillColor>,<strokeColor>,<strokeWeight>
 
 # 円
 # oval,<x1>,<y1>,<x2>,<y2>,<fillColor>,<strokeColor>,<strokeWeight>
-triangle,100,100,150,200,200,100,0 255 0,255 0 0,5
 
-text,50,100,0 0 0,abcdeあいうえお,3,30
+# 三角形
+# triangle,<x1>,<y1>,<x2>,<y2>,<x3>,<y3>,<fillColor>,<strokeColor>,<strokeWeight>
 
-oval,0,0,50,100,100 0 100,255 255 255,5
+# 直線
+# line,<x1>,<y1>,<x2>,<y2>,<strokeColor>,<strokeWeight>
 
-Rect,100,125,10,20,125 0 0,0 125 0,2.5
+# 文字列
+# text,<x>,<y>,<fillColor>,<text>,<fontStyle>,<fontSize>
+
+rect,100,100,200,50,255 0 0,0 255 0,10
+oval,200,200,400,250,0 255 0,0 0 255,5
+triangle,300,300,350,400,400,300,0 255 0,255 0 0,5
+line,0,400,400,0,255 255 0,3.5
+text,400,400,0 0 255,abcdeあいうえお,3,50

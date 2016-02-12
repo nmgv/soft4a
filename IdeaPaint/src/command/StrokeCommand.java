@@ -1,3 +1,5 @@
+/* 線幅の指定 */
+
 package command;
 
 import java.awt.BasicStroke;
