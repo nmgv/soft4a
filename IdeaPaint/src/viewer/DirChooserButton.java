@@ -66,7 +66,7 @@ public class DirChooserButton extends JButton implements ActionListener {
 		if (selected_ == JFileChooser.APPROVE_OPTION) {
 			File file = refChooser_.getSelectedFile();
 			String filePath = file.getPath();
-			filePath = filePath.replace(System.getProperty("user.dir"), "."); //相対パスに変更
+			filePath = filePath.replace(System.getProperty("user.dir") + "/", ""); //相対パスに変更
 
 			targetLabel_.setText(filePath);
 

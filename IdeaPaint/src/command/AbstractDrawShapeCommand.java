@@ -4,30 +4,32 @@ import java.awt.Color;
 
 public abstract class AbstractDrawShapeCommand extends MacroCommand {
 	protected Drawable drawable_;
-	Color fillColor, strokeColor;
-	float strokeWeight;
+	private Color fillColor_, strokeColor_;
+	private float strokeWeight_;
 	
-	public AbstractDrawShapeCommand(Drawable drawable_, Color fillColor, Color strokeColor, float strokeWeight) {
-		this.drawable_ = drawable_;
-		this.fillColor = fillColor;
-		this.strokeColor = strokeColor;
-		this.strokeWeight = strokeWeight;
+	public AbstractDrawShapeCommand(Drawable drawable, Color fillColor, Color strokeColor, float strokeWeight) {
+		this.drawable_ = drawable;
+		this.fillColor_ = fillColor;
+		this.strokeColor_ = strokeColor;
+		this.strokeWeight_ = strokeWeight;
 	}
 
 	private void createCommand() {
-		if(fillColor != null) {
+		clear();
+
+		if(fillColor_ != null) {
 			Command drawFillShapeCommand = getDrawFillShapeCommand();
 			if(drawFillShapeCommand != null) {
-				append(new ColorCommand(drawable_, fillColor));
+				append(new ColorCommand(drawable_, fillColor_));
 				append(drawFillShapeCommand);
 			}
 		}
 
-		if(strokeColor != null) {
+		if(strokeColor_ != null) {
 			Command drawStrokeShapeCommand = getDrawStrokeShapeCommand();
 			if(drawStrokeShapeCommand != null) {
-				append(new ColorCommand(drawable_, strokeColor));
-				append(new StrokeCommand(drawable_, strokeWeight));
+				append(new ColorCommand(drawable_, strokeColor_));
+				append(new StrokeCommand(drawable_, strokeWeight_));
 				append(drawStrokeShapeCommand);
 			}
 		}
