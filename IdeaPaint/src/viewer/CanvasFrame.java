@@ -19,15 +19,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-import util.CSVReader;
-import util.FigFileParser;
-import util.Util;
 import command.ColorCommand;
 import command.Command;
 import command.DrawCanvas;
 import command.DrawFillOvalCommand;
 import command.DrawFillRectCommand;
 import command.MacroCommand;
+import util.CSVReader;
+import util.FigFileParser;
+import util.Util;
 
 public class CanvasFrame extends JFrame implements ActionListener, MouseMotionListener, WindowListener {
 	private int width_ = 400;
@@ -185,6 +185,29 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		canvas_.repaint();
 	}
 
+	//枠付き円 長谷川
+	private void OvalAction() {
+		/*
+		multiHistory_.clear(); //複数回
+		for (int i = 0; i < Util.makeCount(keyword_); i++) {
+			Point p = Util.makePoint(keyword_, width_, height_);
+			Command cmd = new ColorCommand( canvas_, Color.white );
+			multiHistory_.append(cmd);
+			cmd = new DrawFillOvalCommand(canvas_, p);
+			multiHistory_.append(cmd);
+			cmd = new StrokeCommand( canvas_, 5 );
+			multiHistory_.append(cmd);
+			cmd = new ColorCommand( canvas_, Color.black);
+			multiHistory_.append(cmd);
+			cmd = new DrawOvalCommand(canvas_, p);
+			multiHistory_.append(cmd);
+		}
+		multiHistory_.execute();
+		history_.append(multiHistory_);
+		canvas_.repaint();
+		*/
+	}
+
 	private void fillRectAction() {
 		multiHistory_.clear();
 		for (int i = 0; i < Util.makeCount(keyword_); i++) { //複数回
@@ -281,7 +304,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		FigFileParser parser = new FigFileParser(canvas_, data);
 		MacroCommand cmd = parser.parse();
 		history_.append(cmd);
-		cmd.execute();	
+		cmd.execute();
 	}
 
 	public void mouseDragged(MouseEvent e) {

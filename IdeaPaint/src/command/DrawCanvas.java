@@ -44,7 +44,7 @@ public class DrawCanvas extends Canvas implements Drawable {
 	private String filePathSufix_;
 
 	private String figFileDir_;
-	
+
 	private StringBuffer filePath_ = new StringBuffer();
 
 	private PropertiesReader propCanvas_ = new PropertiesReader("./conf/canvas.properties");
@@ -113,9 +113,22 @@ public class DrawCanvas extends Canvas implements Drawable {
 	}
 
 	//描画
+	public void drawFillOval(int x, int y, int width, int height ) {
+		off_.setColor(color_);
+		off_.fillOval(x, y, width, height);
+		update();
+	}
+
 	public void drawFillOval(int x, int y) {
 		off_.setColor(color_);
 		off_.fillOval(x - radius_, y - radius_, radius_ * 2, radius_ * 2);
+		update();
+	}
+
+	//枠だけ円
+	public void drawOval( int x, int y, int width, int height ){
+		off_.setColor(color_);
+		off_.drawOval(x, y, width, height);
 		update();
 	}
 

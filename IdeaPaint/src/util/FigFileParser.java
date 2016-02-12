@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import command.Command;
+import command.DrawOvalCommand;
 import command.DrawTextCommand;
 import command.DrawTriangleCommand;
 import command.Drawable;
@@ -20,7 +21,7 @@ public class FigFileParser {
 
 	public MacroCommand parse() {
 		MacroCommand drawFigCmd = new MacroCommand();
-		
+
 		for(ArrayList<String> list : data) {
 			String figType = list.get(0);
 			list.remove(0);
@@ -32,6 +33,9 @@ public class FigFileParser {
 				break;
 			case "text":
 				cmd = parseText(list);
+				break;
+			case "oval":
+				cmd = parseOval(list);
 				break;
 			}
 
@@ -59,6 +63,21 @@ public class FigFileParser {
 		}
 	}
 
+	private Command parseOval(ArrayList<String> list) {
+		try {
+			int x1 = Validator.validatePositiveInt(list.get(0));
+			int y1 = Validator.validatePositiveInt(list.get(1));
+			int x2 = Validator.validatePositiveInt(list.get(2));
+			int y2 = Validator.validatePositiveInt(list.get(3));
+			Color fillColor = Validator.validateColor(list.get(4));
+			Color strokeColor = Validator.validateColor(list.get(5));
+			Float strokeWeight = Validator.validateStrokeWeight(list.get(6));
+
+			return new DrawOvalCommand(drawable_, x1, y1, x2, y2, fillColor, strokeColor, strokeWeight);
+		} catch(Exception e) {
+			return null;
+		}
+	}
 	private Command parseText(ArrayList<String> list) {
 		try {
 			int x = Validator.validatePositiveInt(list.get(0));
