@@ -189,7 +189,7 @@ public class CanvasFrame extends JFrame implements ActionListener, MouseMotionLi
 		multiHistory_.clear();
 		for (int i = 0; i < Util.makeCount(keyword_); i++) { //複数回
 			Point p = Util.makePoint(keyword_, width_, height_);
-			Command cmd = new DrawFillRectCommand(canvas_, p, r_.nextInt(3) + 1);
+			Command cmd = new DrawFillRectCommand(canvas_, p, 10, 20);
 
 			multiHistory_.append(cmd);
 		}

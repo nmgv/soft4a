@@ -125,6 +125,27 @@ public class DrawCanvas extends Canvas implements Drawable {
 		off_.fillRect(x - length, y - length, length * 2, length * 2);
 		update();
 	}
+	
+	//四角を描画（塗りつぶし）
+	public void drawFillRect(int x, int y, int width, int height) {
+		off_.setColor(color_);
+		off_.fillRect(x - width, y - height, width * 2, height * 2);
+		update();
+	}
+
+	//四角を描画（線）
+	public void drawLineRect(int x, int y, int width, int height){
+		off_.setColor(color_);
+		off_.drawRect(x - width, y - height, width*2, height*2);
+		update();
+	}
+
+	//線を描画
+	public void drawLine(int x1, int y1, int x2, int y2){
+		off_.setColor(color_);
+		off_.drawLine(x1, y1, x2, y2);
+		update();
+	}
 
 	//多角形を描画(塗りつぶし)
 	public void drawFillPolygon(int xPoints[], int yPoints[], int nPoints) {

@@ -13,6 +13,10 @@ public interface Drawable {
 	public abstract void setColor(Color color);
 	public abstract void setStroke(BasicStroke stroke);
 
+	public abstract void drawFillRect(int x, int y, int width, int height);
+	public abstract void drawLineRect(int x, int y, int width, int height);
+	public abstract void drawLine(int x1, int y1, int x2, int y2);
+
 	public abstract void update();
 	public abstract void save(String filepath);
 	public abstract void newOffScreen();
